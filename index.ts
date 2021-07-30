@@ -1,7 +1,7 @@
 /** @format */
 
 import { log } from "console";
-import { Bible } from "./bible";
+import { Bible } from "./models";
 
 Bible.onReady().then(bible => {
 	log(bible.getFunnyVerses());
