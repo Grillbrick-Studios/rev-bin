@@ -1,4 +1,6 @@
 /** @format */
+import { log } from "console";
+import fetch from "node-fetch";
 
 export interface iVerse {
   book: string;
@@ -16,81 +18,6 @@ export interface iBibleJson {
   REV_Bible: iVerse[];
 }
 
-export const NAMES = {
-  BOOKS: {
-    OLD_TESTAMENT: [
-      "Genesis",
-      "Exodus",
-      "Leviticus",
-      "Numbers",
-      "Deuteronomy",
-      "Joshua",
-      "Judges",
-      "Ruth",
-      "1 Samuel",
-      "2 Samuel",
-      "1 Kings",
-      "2 Kings",
-      "1 Chronicles",
-      "2 Chronicles",
-      "Ezra",
-      "Nehemiah",
-      "Esther",
-      "Job",
-      "Psalms",
-      "Proverbs",
-      "Ecclesiastes",
-      "Song of Songs",
-      "Isaiah",
-      "Jeremiah",
-      "Lamentations",
-      "Ezekiel",
-      "Daniel",
-      "Hosea",
-      "Joel",
-      "Amos",
-      "Obadiah",
-      "Jonah",
-      "Micah",
-      "Nahum",
-      "Habakkuk",
-      "Zephaniah",
-      "Haggai",
-      "Zechariah",
-      "Malachi",
-    ],
-    NEW_TESTAMENT: [
-      "Matthew",
-      "Mark",
-      "Luke",
-      "John",
-      "Acts",
-      "Romans",
-      "1 Corinthians",
-      "2 Corinthians",
-      "Galatians",
-      "Ephesians",
-      "Philippians",
-      "Colossians",
-      "1 Thessalonians",
-      "2 Thessalonians",
-      "1 Timothy",
-      "2 Timothy",
-      "Titus",
-      "Philemon",
-      "Hebrews",
-      "James",
-      "1 Peter",
-      "2 Peter",
-      "1 John",
-      "2 John",
-      "3 John",
-      "Jude",
-      "Revelation",
-    ],
-  },
-};
-
 export const PATHS = {
   BIBLE:
     "https://www.revisedenglishversion.com/jsonrevexport.php?permission=yUp&autorun=1&what=bible",
@@ -99,3 +26,104 @@ export const PATHS = {
   COMMENTARY:
     "https://www.revisedenglishversion.com/jsonrevexport.php?permission=yUp&autorun=1&what=commentary",
 };
+
+export class Bible {
+  private static verses: iVerse[];
+
+  private constructor() {}
+
+  private selectedBook?: string;
+  private selectedChapter?: number;
+  private selectedVerse?: number;
+
+  public get Verses(): iVerse[] {
+    return Bible.verses;
+  }
+
+  static async init() {
+    log("Fetching bible. Please wait...");
+    let res = await fetch(PATHS.BIBLE);
+    let bible: iBibleJson = await res.json();
+    Bible.verses = bible.REV_Bible;
+  }
+
+  static async onReady(
+    cb: (verses: Bible) => void = (_) => {}
+  ): Promise<Bible> {
+    if (Bible.verses) cb(new Bible());
+    else await Bible.init();
+    cb(new Bible());
+    return new Bible();
+  }
+
+  getBooks(): string[] {
+    const booksArray = Bible.verses.map((v) => v.book);
+    const bookSet = new Set(booksArray);
+    return new Array(...bookSet.keys());
+  }
+
+  getChapters(book: string) {
+    const chaptersArray = Bible.verses
+      .filter((v) => v.book === book)
+      .map((v) => v.chapter);
+    const chapterSet = new Set(chaptersArray);
+    return new Array(...chapterSet.keys());
+  }
+
+  numChapters(book: string): number {
+    return this.getChapters(book).length;
+  }
+
+  getVerses(book: string, chapter: number, verse?: number): iVerse[] {
+    if (verse)
+      return Bible.verses.filter(
+        (v) => v.book === book && v.chapter === chapter && v.verse === verse
+      );
+    return Bible.verses.filter((v) => v.book === book && v.chapter === chapter);
+  }
+
+  getVerseNumbers(book: string, chapter: number): number[] {
+    return this.getVerses(book, chapter).map((v) => v.verse);
+  }
+
+  numVerses(book: string, chapter: number): number {
+    return this.getVerses(book, chapter).length;
+  }
+
+  ls(): iVerse[] | number[] | string[] {
+    if (this.selectedVerse && this.selectedChapter && this.selectedBook)
+      return this.getVerses(
+        this.selectedBook,
+        this.selectedChapter,
+        this.selectedVerse
+      );
+    if (this.selectedChapter && this.selectedBook)
+      return this.getVerseNumbers(this.selectedBook, this.selectedChapter);
+    if (this.selectedBook) return this.getChapters(this.selectedBook);
+    return this.getBooks();
+  }
+
+  selectBook(book: string) {
+    this.getBooks().forEach((bk) => {
+      if (bk === book) this.selectedBook = book;
+    });
+  }
+
+  selectChapter(chapter: number) {
+    if (!this.selectedBook) return;
+    if (chapter > this.numChapters(this.selectedBook)) return;
+    this.selectedChapter = chapter;
+  }
+
+  selectVerse(verse: number) {
+    if (!this.selectedBook || !this.selectedChapter) return;
+    if (verse > this.numVerses(this.selectedBook, this.selectedChapter)) return;
+    this.selectedVerse = verse;
+  }
+
+  up() {
+    if (this.selectedVerse) this.selectedVerse = undefined;
+    else if (this.selectedChapter) this.selectedChapter = undefined;
+    else if (this.selectedBook) this.selectedBook = undefined;
+  }
+}
