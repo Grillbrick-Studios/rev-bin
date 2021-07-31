@@ -20,4 +20,4 @@
 # End of https://www.toptal.com/developers/gitignore/api/yarn
 
 # Ignore large generated files
-bible.json
+data

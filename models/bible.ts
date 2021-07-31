@@ -5,16 +5,10 @@ import fetch from "node-fetch";
 import { promises as fs } from "fs";
 import { iVerse, Verse } from "./verse";
 
-export const PATHS = {
-	BIBLE:
-		"https://www.revisedenglishversion.com/jsonrevexport.php?permission=yUp&autorun=1&what=bible",
-	APPENDICES:
-		"https://www.revisedenglishversion.com/jsonrevexport.php?permission=yUp&autorun=1&what=appendices",
-	COMMENTARY:
-		"https://www.revisedenglishversion.com/jsonrevexport.php?permission=yUp&autorun=1&what=commentary",
-};
+export const URL =
+	"https://www.revisedenglishversion.com/jsonrevexport.php?permission=yUp&autorun=1&what=bible";
 
-const BibleFile = "bible.json";
+const Filename = "data/bible.json";
 
 export interface iBibleJson {
 	date: Date | string;
@@ -31,14 +25,19 @@ export class Bible {
 	private selectedVerse?: number;
 
 	private static async fetch() {
-		let res = await fetch(PATHS.BIBLE);
+		log("Fetching bible from web. Please wait...");
+
+		let res = await fetch(URL);
 		let bible: iBibleJson = await res.json();
 		Bible.verses = bible.REV_Bible.map(v => new Verse(v));
+		log("Bible downloaded!");
 	}
 
 	private static async writeToFile() {
+		log("Saving Bible to file. Please wait...");
+
 		fs.writeFile(
-			BibleFile,
+			Filename,
 			JSON.stringify({
 				date: new Date(),
 				REV_Bible: Bible.verses.map(v => v.unwrap),
@@ -47,47 +46,43 @@ export class Bible {
 				encoding: "utf8",
 			},
 		);
+		log("Bible Saved to disk!");
 	}
 
 	private static async readFromFile() {
-		const bibleString: string = await fs.readFile(BibleFile, {
+		log("Fetching bible from file. Please wait...");
+
+		const bibleString: string = await fs.readFile(Filename, {
 			encoding: "utf-8",
 		});
 		const bible: iBibleJson = JSON.parse(bibleString);
 		Bible.verses = bible.REV_Bible.map(v => new Verse(v));
+		log("Bible loaded from disk");
 
 		// check if the date is outdated
 		if (typeof bible.date === "string") bible.date = new Date(bible.date);
 
 		if (new Date().getTime() - bible.date.getTime() > 1000 * 60 * 60 * 24 * 7) {
+			log("Bible out of date - updating...");
 			await Bible.fetch();
 			await Bible.writeToFile();
 		}
 	}
 
 	static async init() {
-		log("Fetching bible. Please wait...");
-
 		// check if the file exists.
 		try {
-			await fs.stat(BibleFile);
+			await fs.stat(Filename);
 			await Bible.readFromFile();
 		} catch (err) {
 			if (err.code === "ENOENT") {
 				// BibleFile doesn't exist.
 				await Bible.fetch();
 				await Bible.writeToFile();
-			} else if (err) {
+			} else {
 				log(`An unknown error occured reading the BibleFile: ${err}`);
 			}
 		}
-	}
-
-	getFunnyVerses() {
-		const funnyVerses = Bible.verses
-			.map(v => v.html())
-			.filter(v => v.indexOf("[") >= 0 || v.indexOf("]") >= 0);
-		return funnyVerses;
 	}
 
 	static async onReady(cb: (verses: Bible) => void = _ => {}): Promise<Bible> {
@@ -95,6 +90,13 @@ export class Bible {
 		else await Bible.init();
 		cb(new Bible());
 		return new Bible();
+	}
+
+	getFunnyVerses() {
+		const funnyVerses = Bible.verses
+			.map(v => v.html())
+			.filter(v => v.indexOf("[") >= 0 || v.indexOf("]") >= 0);
+		return funnyVerses;
 	}
 
 	getBooks(): string[] {
@@ -165,6 +167,6 @@ export class Bible {
 	up() {
 		if (this.selectedVerse) this.selectedVerse = undefined;
 		else if (this.selectedChapter) this.selectedChapter = undefined;
-		else if (this.selectedBook) this.selectedBook = undefined;
+		else this.selectedBook = undefined;
 	}
 }
