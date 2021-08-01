@@ -35,6 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
+            ["@tsconfig/node14", "npm:1.0.1"],
             ["@types/node", "npm:16.4.7"],
             ["@types/node-fetch", "npm:2.5.12"],
             ["node-fetch", "npm:2.6.1"],
@@ -1864,6 +1865,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["rev-bin", "workspace:."],
+            ["@tsconfig/node14", "npm:1.0.1"],
             ["@types/node", "npm:16.4.7"],
             ["@types/node-fetch", "npm:2.5.12"],
             ["node-fetch", "npm:2.6.1"],

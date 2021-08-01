@@ -25,16 +25,26 @@ export class Verse implements iVerse {
 	public html(): string {
 		let result = this.data.versetext;
 		result = result?.replace(/\[hp\]/g, "<br />");
-		result = result?.replace(/\[hpbegin\]/g, '<div class="hpbegin">');
+		result = result?.replace(/\[hpbegin\]/g, '<div class="hp">');
+		result = result?.replace(/\[hpend\]/g, "</div>");
+		result = result?.replace(/\[listbegin\]/g, '<div class="list">');
+		result = result?.replace(/\[listend\]/g, "</div>");
 		result = result?.replace(/\[lb\]/g, "<br />");
-		result = result?.replace(/\[mvh\]/g, "<br />");
+		result = result?.replace(
+			/\[mvh\]/g,
+			`
+			<h3>${this.heading}</h3>
+			`,
+		);
 		result = result?.replace(/\[br\]/g, "<br />");
 		result = result?.replace(/\[fn\]/g, "<footnote />");
-		result = result?.replace(/\[\[/g, "<em>");
-		result = result?.replace(/\]\]/g, "</em>");
 		result = result?.replace(/\[pg\]/g, "<br />");
 		result = result?.replace(/\[bq\]/g, '<span class="bq">');
 		result = result?.replace(/\[\/bq\]/g, "</span>");
+		result = result?.replace(/\[\[/g, "<em>");
+		result = result?.replace(/\]\]/g, "</em>");
+		result = result?.replace(/\[/g, "<em style='font-weight: lighter;'>");
+		result = result?.replace(/\]/g, "</em>");
 		return `${this.book} ${this.chapter}:${this.verse} ${result}`;
 	}
 	/// Getters ///

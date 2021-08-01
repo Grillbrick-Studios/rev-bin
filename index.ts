@@ -4,6 +4,10 @@ import { log } from "console";
 import { Appendices, Bible, Commentary } from "./models";
 
 (async function () {
+	const book = "Genesis";
+	const chapter = 1;
+	const verse = 2;
+
 	try {
 		await fs.stat("data");
 	} catch (error) {
@@ -11,21 +15,24 @@ import { Appendices, Bible, Commentary } from "./models";
 			await fs.mkdir("data");
 		}
 	}
-	const bible = await Bible.onReady();
-	log("Bible Loaded!");
-	const book = "Genesis";
-	const chapter = 1;
-	const verse = 2;
-	bible.selectBook(book);
-	bible.selectChapter(chapter);
-	bible.selectVerse(verse);
 
-	const c = await Commentary.onReady();
-	log("Commentary loaded!");
-	c.selectBook(book);
-	c.selectChapter(chapter);
-	c.selectVerse(verse);
+	Bible.onReady().then(bible => {
+		log("Bible Loaded!");
+		bible.selectBook(book);
+		bible.selectChapter(chapter);
+		bible.selectVerse(verse);
+		const funny = bible.getFunnyVerses();
+		log(funny);
+	});
 
-	const a = await Appendices.onReady();
-	log("Appendices loaded!");
+	Commentary.onReady().then(c => {
+		log("Commentary loaded!");
+		c.selectBook(book);
+		c.selectChapter(chapter);
+		c.selectVerse(verse);
+	});
+
+	Appendices.onReady().then(_ => {
+		log("Appendices loaded!");
+	});
 })();

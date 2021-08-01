@@ -96,6 +96,7 @@ export class Bible {
 		const funnyVerses = Bible.verses
 			.map(v => v.html())
 			.filter(v => v.indexOf("[") >= 0 || v.indexOf("]") >= 0);
+		//.map(v => v.slice(v.indexOf("["), v.indexOf("]")));
 		return funnyVerses;
 	}
 

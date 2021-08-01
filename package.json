@@ -6,6 +6,7 @@
     "start": "nodemon"
   },
   "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
     "@types/node": "^16.4.7",
     "@types/node-fetch": "^2",
     "nodemon": "^2.0.12",
