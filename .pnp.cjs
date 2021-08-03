@@ -40,6 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node-fetch", "npm:2.5.12"],
             ["node-fetch", "npm:2.6.1"],
             ["nodemon", "npm:2.0.12"],
+            ["rev", "portal:../rev::locator=rev-bin%40workspace%3A."],
             ["ts-node", "virtual:25cdf23d180a971d9ba44b9f360ac45df28412e41f441cc196ca36cf23474fba6af087afe1b23829f79fc1048b95e5a6e86ef2e17b77bb1ac2d096198412a5a6#npm:10.1.0"],
             ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
           ],
@@ -1860,6 +1861,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["rev", [
+        ["portal:../rev::locator=rev-bin%40workspace%3A.", {
+          "packageLocation": "../rev/",
+          "packageDependencies": [
+            ["rev", "portal:../rev::locator=rev-bin%40workspace%3A."],
+            ["node-fetch", "npm:2.6.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["rev-bin", [
         ["workspace:.", {
           "packageLocation": "./",
@@ -1870,6 +1881,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node-fetch", "npm:2.5.12"],
             ["node-fetch", "npm:2.6.1"],
             ["nodemon", "npm:2.0.12"],
+            ["rev", "portal:../rev::locator=rev-bin%40workspace%3A."],
             ["ts-node", "virtual:25cdf23d180a971d9ba44b9f360ac45df28412e41f441cc196ca36cf23474fba6af087afe1b23829f79fc1048b95e5a6e86ef2e17b77bb1ac2d096198412a5a6#npm:10.1.0"],
             ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
           ],

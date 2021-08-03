@@ -3,7 +3,7 @@
   "packageManager": "yarn@3.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon"
+    "dev": "nodemon"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
@@ -14,6 +14,10 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.1",
+    "rev": "^0.0.1",
     "ts-node": "^10.1.0"
+  },
+  "resolutions": {
+    "rev": "portal:../rev"
   }
 }

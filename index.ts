@@ -1,7 +1,7 @@
 /** @format */
 import { promises as fs } from "fs";
 import { log } from "console";
-import { Appendices, Bible, Commentary } from "./models";
+import { Appendices, Bible, Commentary } from "rev";
 
 (async function () {
 	const book = "Genesis";
