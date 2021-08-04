@@ -16,6 +16,7 @@
   "dependencies": {
     "node-fetch": "^2.6.1",
     "rev": "^0.0.1",
+    "simple-terminal-menu": "^2.0.0",
     "ts-node": "^10.1.0"
   },
   "resolutions": {
