@@ -1,12 +1,20 @@
 /** @format */
 import { promises as fs } from "fs";
 import { log } from "console";
-import { Appendices, Bible, Commentary } from "rev";
+import { Bible, Verse } from "rev";
 
-(async function () {
-	const book = "Genesis";
-	const chapter = 1;
-	const verse = 2;
+interface iData<T> {
+	data: T;
+}
+
+async function LoadIfExists<T>(
+	path: string,
+	fallback: () => Promise<iData<T>>,
+): Promise<T> {
+	interface iFileData {
+		date: string | Date;
+		data: T;
+	}
 
 	try {
 		await fs.stat("data");
@@ -16,23 +24,42 @@ import { Appendices, Bible, Commentary } from "rev";
 		}
 	}
 
-	Bible.onReady().then(bible => {
-		log("Bible Loaded!");
-		bible.selectBook(book);
-		bible.selectChapter(chapter);
-		bible.selectVerse(verse);
-		const funny = bible.getFunnyVerses();
-		log(funny);
-	});
+	try {
+		await fs.stat(path);
+	} catch (error) {
+		if (error.code === "ENOENT") {
+			const data = await fallback();
+			log("Bible Loaded!");
+			const output: iFileData = {
+				date: new Date(),
+				data: data.data,
+			};
+			fs.writeFile(path, JSON.stringify(output), {
+				encoding: "utf8",
+			});
+			return data.data;
+		} else {
+			throw error;
+		}
+	}
 
-	Commentary.onReady().then(c => {
-		log("Commentary loaded!");
-		c.selectBook(book);
-		c.selectChapter(chapter);
-		c.selectVerse(verse);
+	const dataString = await fs.readFile(path, {
+		encoding: "utf8",
 	});
+	const dataJson: iFileData = JSON.parse(dataString);
 
-	Appendices.onReady().then(_ => {
-		log("Appendices loaded!");
-	});
+	return dataJson.data;
+}
+
+(async function () {
+	try {
+		const bibleData: Verse[] = await LoadIfExists(
+			"data/bible.json",
+			Bible.onReady,
+		);
+		Bible.data = bibleData;
+		console.log(bible.ls());
+	} catch (err) {
+		console.error(err);
+	}
 })();
