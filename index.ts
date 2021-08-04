@@ -1,19 +1,14 @@
 /** @format */
 import { promises as fs } from "fs";
-import { log } from "console";
-import { Bible, Verse } from "rev";
-
-interface iData<T> {
-	data: T;
-}
+import { Appendices, Bible, Commentary, iData, Verse } from "rev";
 
 async function LoadIfExists<T>(
 	path: string,
 	fallback: () => Promise<iData<T>>,
-): Promise<T> {
+): Promise<T[]> {
 	interface iFileData {
 		date: string | Date;
-		data: T;
+		data: T[];
 	}
 
 	try {
@@ -28,16 +23,16 @@ async function LoadIfExists<T>(
 		await fs.stat(path);
 	} catch (error) {
 		if (error.code === "ENOENT") {
-			const data = await fallback();
-			log("Bible Loaded!");
+			const dataObject = await fallback();
+			const { data } = dataObject;
 			const output: iFileData = {
 				date: new Date(),
-				data: data.data,
+				data,
 			};
 			fs.writeFile(path, JSON.stringify(output), {
 				encoding: "utf8",
 			});
-			return data.data;
+			return dataObject.data;
 		} else {
 			throw error;
 		}
@@ -57,8 +52,22 @@ async function LoadIfExists<T>(
 			"data/bible.json",
 			Bible.onReady,
 		);
-		Bible.data = bibleData;
+		const bible = new Bible(bibleData);
 		console.log(bible.ls());
+
+		const appendixData = await LoadIfExists(
+			"data/appendices.json",
+			Appendices.onReady,
+		);
+		const appendices = new Appendices(appendixData);
+		console.log(appendices.ls());
+
+		const commentaryData = await LoadIfExists(
+			"data/commentary.json",
+			Commentary.onReady,
+		);
+		const commentary = new Commentary(commentaryData);
+		console.log(commentary.ls());
 	} catch (err) {
 		console.error(err);
 	}
