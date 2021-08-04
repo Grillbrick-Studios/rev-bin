@@ -3,7 +3,8 @@
   "packageManager": "yarn@3.0.0",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "start": "ts-node index.ts"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",

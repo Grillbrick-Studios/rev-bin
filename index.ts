@@ -1,6 +1,6 @@
 /** @format */
 import { promises as fs } from "fs";
-import { Appendices, Bible, Commentary, iData, Verse } from "rev";
+import { Bible, iData, Verse } from "rev";
 
 async function LoadIfExists<T>(
 	path: string,
@@ -53,21 +53,20 @@ async function LoadIfExists<T>(
 			Bible.onReady,
 		);
 		const bible = new Bible(bibleData);
-		console.log(bible.ls());
 
-		const appendixData = await LoadIfExists(
-			"data/appendices.json",
-			Appendices.onReady,
-		);
-		const appendices = new Appendices(appendixData);
-		console.log(appendices.ls());
+		//const appendixData = await LoadIfExists(
+		//"data/appendices.json",
+		//Appendices.onReady,
+		//);
+		//const appendices = new Appendices(appendixData);
 
-		const commentaryData = await LoadIfExists(
-			"data/commentary.json",
-			Commentary.onReady,
-		);
-		const commentary = new Commentary(commentaryData);
-		console.log(commentary.ls());
+		//const commentaryData = await LoadIfExists(
+		//"data/commentary.json",
+		//Commentary.onReady,
+		//);
+		//const commentary = new Commentary(commentaryData);
+
+		// Error handling here
 	} catch (err) {
 		console.error(err);
 	}
