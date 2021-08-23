@@ -3,6 +3,10 @@ import { promises as fs } from "fs";
 import { Appendices, Bible, Commentary, iData, Verse } from "rev";
 import Menu from "simple-terminal-menu";
 
+let bible: Bible;
+let appendices: Appendices;
+let commentary: Commentary;
+
 async function LoadIfExists<T>(
 	path: string,
 	fallback: () => Promise<iData<T>>,
@@ -46,10 +50,6 @@ async function LoadIfExists<T>(
 
 	return dataJson.data;
 }
-
-let bible: Bible;
-let appendices: Appendices;
-let commentary: Commentary;
 
 function mainMenu() {
 	const menu = new Menu({
@@ -135,6 +135,7 @@ function subMenu<T>(data: iData<T>) {
 		commentary = new Commentary(commentaryData);
 
 		mainMenu();
+		//console.log(bible.ls());
 
 		// Error handling here
 	} catch (err) {
