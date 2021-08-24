@@ -83,7 +83,7 @@ function subMenu<T>(data: iData<T>) {
 	const ls = data.ls();
 
 	if (ls.length === 1) {
-		// TODO: render html to terminal here
+		// TODO: render html to terminal here and return
 	}
 
 	const menu = new Menu({

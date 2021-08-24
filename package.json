@@ -18,8 +18,5 @@
     "rev-bible": "latest",
     "simple-terminal-menu": "^2.0.0",
     "ts-node": "^10.1.0"
-  },
-  "resolutions": {
-    "rev-bible": "portal:../rev"
   }
 }
