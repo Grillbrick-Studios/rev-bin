@@ -20,6 +20,6 @@
     "ts-node": "^10.1.0"
   },
   "resolutions": {
-    "rev": "portal:../rev"
+    "rev-bible": "portal:../rev"
   }
 }
