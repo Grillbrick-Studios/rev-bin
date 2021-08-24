@@ -1,6 +1,6 @@
 /** @format */
 import { promises as fs } from "fs";
-import { Appendices, Bible, Commentary, iData, Verse } from "rev";
+import { Appendices, Bible, Commentary, iData, iVerse } from "rev-bible";
 import Menu from "simple-terminal-menu";
 
 let bible: Bible;
@@ -116,7 +116,7 @@ function subMenu<T>(data: iData<T>) {
 
 (async function () {
 	try {
-		const bibleData: Verse[] = await LoadIfExists(
+		const bibleData: iVerse[] = await LoadIfExists(
 			"data/bible.json",
 			Bible.onReady,
 		);

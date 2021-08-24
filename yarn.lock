@@ -1628,6 +1628,15 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"rev-bible@npm:latest":
+  version: 2.1.1
+  resolution: "rev-bible@npm:2.1.1"
+  dependencies:
+    node-fetch: ^2.6.1
+  checksum: 6b041cd3040eb0b6d127d00da7a9e93e06199eeeee245535aaea4628440201384abee8394cd68edd8e0efb00dfc41cb8b13e56b2fcef95a6375996201d9be96d
+  languageName: node
+  linkType: hard
+
 "rev-bin@workspace:.":
   version: 0.0.0-use.local
   resolution: "rev-bin@workspace:."
@@ -1638,6 +1647,7 @@ fsevents@~2.3.2:
     node-fetch: ^2.6.1
     nodemon: ^2.0.12
     rev: ^0.0.1
+    rev-bible: latest
     simple-terminal-menu: ^2.0.0
     ts-node: ^10.1.0
     typescript: ^4.3.5
